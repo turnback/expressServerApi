@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="" method="POST">
+        名字：<input type="text" name="user">
+        密码：<input type="password" name="pwd">
+        <input type="submit" value="登陆">
+    </form>
+
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        $("input[type='submit']").on("click", function (ev) {
+            let user = $("input[type='text']").val();
+            let pwd = $("input[type='password']").val();
+
+            //构造格式
+            let para = `user=${user}&pwd=${pwd}`;
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("post", "http://192.168.5.17:7777/process_post", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(para);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log("success");
+                    console.log(xhr.responseText);
+                    if (xhr.responseText === "yes") {
+                        alert("欢迎管理员：" + user + " 登陆!");
+                    } else if (xhr.responseText === "no") {
+                        alert("您没有登陆权限!");
+                    }
+                    console.log(xhr.responseText);
+                } else if (xhr.readyState == 4 && xhr.status != 200) {
+                    console.log("failed");
+                }
+            }
+            ev.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+
+</html>
